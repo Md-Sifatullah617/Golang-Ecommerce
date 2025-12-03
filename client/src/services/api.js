@@ -48,4 +48,13 @@ export const deleteProduct = async (productId) => {
   }
 };
 
+export const getProductById = async (productId) => {
+  try {
+    const response = await api.get(`/products/${productId}`);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
 export default api;

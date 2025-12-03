@@ -44,7 +44,6 @@
 // export default ProductCard;
 
 
-import React from 'react';
 import { Link } from 'react-router-dom';
 import '../styles/ProductCard.css';
 
@@ -62,7 +61,7 @@ function ProductCard({ product, onEdit, onDelete }) {
       <div className="product-actions">
         <button onClick={() => onEdit(product)}>Edit</button>
         <button onClick={() => onDelete(product._id)}>Delete</button>
-        <Link to={`/product/${product._id}`}>View Details</Link> {/* Add this link */}
+        <Link to={`/product/${product.id}`}>View Details</Link> {/* Add this link */}
       </div>
     </div>
   );

@@ -85,7 +85,7 @@
 
 // export default AddEditProduct;
 
-import React, { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import '../styles/AddEditProduct.css';
 
 function AddEditProduct({ product, onSave, onCancel }) {
@@ -117,7 +117,10 @@ function AddEditProduct({ product, onSave, onCancel }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await onSave(formData);
+    await onSave({
+      ...formData,
+      price: parseFloat(formData.price),
+    });
     setFormData({
       title: '',
       description: '',

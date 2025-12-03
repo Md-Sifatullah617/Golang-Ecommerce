@@ -1,19 +1,19 @@
-import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
 import axios from 'axios'; // Import Axios or your preferred HTTP library
+import { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import '../styles/SingleProductPage.css';
 
 function SingleProductPage() {
-  const { productId } = useParams();
+  const { id } = useParams();
   const [product, setProduct] = useState(null);
 
   useEffect(() => {
-    fetchProduct(productId);
-  }, [productId]);
+    fetchProduct(id);
+  }, [id]);
 
-  const fetchProduct = async (id) => {
+  const fetchProduct = async (productId) => {
     try {
-      const response = await axios.get(`http://localhost:5000/api/products/${id}`); // Adjust the API endpoint
+      const response = await axios.get(`http://localhost:8080/products/${productId}`); // Adjust the API endpoint
       setProduct(response.data);
     } catch (error) {
       console.error('Error fetching product:', error);

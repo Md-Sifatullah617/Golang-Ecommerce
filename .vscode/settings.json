@@ -1,0 +1,5 @@
+{
+  "editor.inlineSuggest.experimental.emptyResponseInformation": false,
+  "editor.inlineSuggest.edits.renderSideBySide": "never",
+  "editor.inlineSuggest.enabled": false
+}

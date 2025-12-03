@@ -1,6 +1,5 @@
-import React from 'react';
-import ProductCard from './ProductCard';
 import '../styles/ProductList.css';
+import ProductCard from './ProductCard';
 
 // function ProductList({ products, onEdit, onDelete }) {
 //   return (
@@ -23,15 +22,15 @@ function ProductList({ products, onEdit, onDelete }) {
     console.log(products)
     return (
         <div className="product-list">
-        {products.map((product) => (
-            <ProductCard
-            key={product._id}
-            product={product}
-            onEdit={() => onEdit(product)} // Ensure onEdit is a function that handles editing
-            onDelete={onDelete}
-            />
+            {products.map((product) => (
+                <ProductCard
+                    key={product.id}
+                    product={product}
+                    onEdit={() => onEdit(product)} // Ensure onEdit is a function that handles editing
+                    onDelete={onDelete}
+                />
             ))}
-      </div>
+        </div>
     );
 }
 
