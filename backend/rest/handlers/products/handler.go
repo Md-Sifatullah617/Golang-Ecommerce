@@ -1,7 +1,13 @@
 package products
 
-type Handler struct{}
+import "ecommerce/rest/middleware"
 
-func NewHandler() *Handler {
-	return &Handler{}
+type Handler struct {
+	middlewares *middleware.Middlewares
+}
+
+func NewHandler(middlewares *middleware.Middlewares) *Handler {
+	return &Handler{
+		middlewares: middlewares,
+	}
 }
