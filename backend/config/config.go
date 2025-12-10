@@ -9,9 +9,10 @@ import (
 )
 
 type Config struct {
-	Version     string
-	ServiceName string
-	HttpPort    int
+	Version      string
+	ServiceName  string
+	HttpPort     int
+	JwtSecretKey string
 }
 
 var configurations Config
@@ -47,10 +48,17 @@ func loadConfig() {
 		os.Exit(1)
 	}
 
+	jwtSecret := os.Getenv("JWT_SECRET_KEY")
+	if jwtSecret == "" {
+		fmt.Println("JWT secret be won't be empty")
+		os.Exit(1)
+	}
+
 	configurations = Config{
-		Version:     version,
-		ServiceName: serviceName,
-		HttpPort:    int(prt),
+		Version:      version,
+		ServiceName:  serviceName,
+		HttpPort:     int(prt),
+		JwtSecretKey: jwtSecret,
 	}
 }
 
