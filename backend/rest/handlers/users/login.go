@@ -45,5 +45,5 @@ func (h *Handler) Login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	util.SendData(w, accessToken, http.StatusCreated)
+	util.SendData(w, accessToken, http.StatusOK)
 }
