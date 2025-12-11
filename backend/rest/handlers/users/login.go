@@ -1,8 +1,6 @@
 package users
 
 import (
-	"ecommerce/config"
-	"ecommerce/database"
 	"ecommerce/util"
 	"encoding/json"
 	"fmt"
@@ -24,14 +22,17 @@ func (h *Handler) Login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	usr := database.Find(requestLogin.Email, requestLogin.Password)
+	usr, err := h.userRepo.Find(requestLogin.Email, requestLogin.Password)
+	if err != nil {
+		http.Error(w, "Unauthorized", http.StatusUnauthorized)
+		return
+	}
 	if usr == nil {
 		http.Error(w, "Invalid credentials", http.StatusUnauthorized)
 		return
 	}
 
-	cnf := config.GetConfig()
-	accessToken, err := util.CreateJWT(cnf.JwtSecretKey, util.Payload{
+	accessToken, err := util.CreateJWT(h.cnf.JwtSecretKey, util.Payload{
 		Sub:         usr.ID,
 		FirstName:   usr.FirstName,
 		LastName:    usr.LastName,

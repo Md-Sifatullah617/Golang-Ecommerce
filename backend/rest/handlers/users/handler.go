@@ -1,7 +1,21 @@
 package users
 
-type Handler struct{}
+import (
+	"ecommerce/config"
+	"ecommerce/repo"
+)
 
-func NewHandler() *Handler {
-	return &Handler{}
+type Handler struct {
+	cnf      *config.Config
+	userRepo repo.UserRepo
+}
+
+func NewHandler(
+	userRepo repo.UserRepo,
+	cnf *config.Config,
+) *Handler {
+	return &Handler{
+		cnf:      cnf,
+		userRepo: userRepo,
+	}
 }
