@@ -2,26 +2,15 @@ package repo
 
 import (
 	"database/sql"
+	"ecommerce/domain"
+	"ecommerce/user"
 	"fmt"
 
 	"github.com/jmoiron/sqlx"
 )
 
-type User struct {
-	ID          int    `json:"id" db:"id"`
-	FirstName   string `json:"first_name" db:"first_name"`
-	LastName    string `json:"last_name" db:"last_name"`
-	Email       string `json:"email" db:"email"`
-	Password    string `json:"password" db:"password"`
-	IsShopOwner bool   `json:"is_shop_owner" db:"is_shop_owner"`
-}
-
 type UserRepo interface {
-	Create(u User) (*User, error)
-	Find(email, password string) (*User, error)
-	// List() ([]*User, error)
-	// Delete(userID int) error
-	// Update(u User) (*User, error)
+	user.UserRepo
 }
 
 type userRepo struct {
@@ -34,7 +23,7 @@ func NewUserRepo(dbCon *sqlx.DB) UserRepo {
 	}
 }
 
-func (r *userRepo) Create(u User) (*User, error) {
+func (r *userRepo) Create(u domain.User) (*domain.User, error) {
 	query := `
 	INSERT INTO users (
 		first_name,
@@ -69,7 +58,7 @@ func (r *userRepo) Create(u User) (*User, error) {
 	return &u, nil
 }
 
-func (r *userRepo) Find(email, password string) (*User, error) {
+func (r *userRepo) Find(email, password string) (*domain.User, error) {
 	query := `
         SELECT 
             id,
@@ -82,7 +71,7 @@ func (r *userRepo) Find(email, password string) (*User, error) {
         WHERE email = $1 AND password = $2
         LIMIT 1
     `
-	var user User
+	var user domain.User
 	err := r.dbCon.Get(&user, query, email, password)
 	if err != nil {
 		if err == sql.ErrNoRows {

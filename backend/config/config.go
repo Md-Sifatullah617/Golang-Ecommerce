@@ -13,9 +13,19 @@ type Config struct {
 	ServiceName  string
 	HttpPort     int
 	JwtSecretKey string
+	DB           *DBConfig
 }
 
 var configurations *Config
+
+type DBConfig struct {
+	Host          string
+	Port          int
+	Name          string
+	User          string
+	Password      string
+	EnableSSLMODE bool
+}
 
 func loadConfig() {
 	err := godotenv.Load()
@@ -54,11 +64,65 @@ func loadConfig() {
 		os.Exit(1)
 	}
 
+	dbHost := os.Getenv("DB_HOST")
+	if dbHost == "" {
+		fmt.Println("DB HOST is required")
+		os.Exit(1)
+	}
+
+	dbPort := os.Getenv("DB_PORT")
+	if dbPort == "" {
+		fmt.Println("DB PORT is required")
+		os.Exit(1)
+	}
+
+	dbPrt, err := strconv.ParseInt(dbPort, 10, 64)
+	if err != nil {
+		fmt.Println("DB Port must be a number")
+		os.Exit(1)
+	}
+
+	dbName := os.Getenv("DB_NAME")
+	if dbName == "" {
+		fmt.Println("NAME is required")
+		os.Exit(1)
+	}
+
+	dbUser := os.Getenv("DB_USER")
+	if dbUser == "" {
+		fmt.Println("USER is required")
+		os.Exit(1)
+	}
+
+	dbPass := os.Getenv("DB_PASSWORD")
+	if dbPass == "" {
+		fmt.Println("PASSWORD is required")
+		os.Exit(1)
+	}
+
+	enableSslMode := os.Getenv("DB_ENABLE_SSL_MODE")
+
+	enableSSLMode, err := strconv.ParseBool(enableSslMode)
+	if err != nil {
+		fmt.Println("Invalid enable ssl mode value", err)
+		os.Exit(1)
+	}
+
+	dbConfig := &DBConfig{
+		Host:          dbHost,
+		Port:          int(dbPrt),
+		Name:          dbName,
+		User:          dbUser,
+		Password:      dbPass,
+		EnableSSLMODE: enableSSLMode,
+	}
+
 	configurations = &Config{
 		Version:      version,
 		ServiceName:  serviceName,
 		HttpPort:     int(prt),
 		JwtSecretKey: jwtSecret,
+		DB:           dbConfig,
 	}
 }
 

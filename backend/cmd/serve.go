@@ -3,30 +3,48 @@ package cmd
 import (
 	"ecommerce/config"
 	"ecommerce/infra/db"
+	"ecommerce/product"
 	"ecommerce/repo"
 	"ecommerce/rest"
-	"ecommerce/rest/handlers/products"
-	"ecommerce/rest/handlers/users"
+	prdHandler "ecommerce/rest/handlers/products"
+	usrHandler "ecommerce/rest/handlers/users"
 	"ecommerce/rest/middleware"
+	"ecommerce/user"
 	"fmt"
 	"os"
 )
 
 func Serve() {
+	// Load config
 	cnf := config.GetConfig()
 
-	dbCon, err := db.NewConnection()
+	// Connect to database
+	dbCon, err := db.NewConnection(cnf.DB)
 	if err != nil {
-		fmt.Println(err)
+		fmt.Println("failed to connect database:", err)
+		os.Exit(1)
+	}
+	defer dbCon.Close()
+
+	// Run migrations
+	err = db.MigrateDB(dbCon, "./migrations")
+	if err != nil {
+		fmt.Println("Migration failed:", err)
 		os.Exit(1)
 	}
 
 	middlewares := middleware.NewMiddlewares(cnf)
-	productRepo := repo.NewProductRepo()
+
+	// Repos
+	productRepo := repo.NewProductRepo(dbCon)
 	userRepo := repo.NewUserRepo(dbCon)
 
-	productHandler := products.NewHandler(middlewares, productRepo)
-	userHandler := users.NewHandler(userRepo, cnf)
+	// Domains
+	prdcSvc := product.NewService(productRepo)
+	usrSvc := user.NewService(userRepo)
+
+	productHandler := prdHandler.NewHandler(middlewares, prdcSvc)
+	userHandler := usrHandler.NewHandler(cnf, usrSvc)
 
 	server := rest.NewServer(
 		cnf,

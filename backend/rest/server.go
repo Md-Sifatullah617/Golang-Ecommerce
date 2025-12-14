@@ -33,7 +33,6 @@ func NewServer(
 func (server *Server) Start() {
 	manager := middleware.NewManager()
 	manager.Use(
-		middleware.Preflight,
 		middleware.Cors,
 		middleware.Logger,
 	)

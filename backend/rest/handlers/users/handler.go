@@ -2,20 +2,19 @@ package users
 
 import (
 	"ecommerce/config"
-	"ecommerce/repo"
 )
 
 type Handler struct {
-	cnf      *config.Config
-	userRepo repo.UserRepo
+	cnf *config.Config
+	svc Service
 }
 
 func NewHandler(
-	userRepo repo.UserRepo,
 	cnf *config.Config,
+	svc Service,
 ) *Handler {
 	return &Handler{
-		cnf:      cnf,
-		userRepo: userRepo,
+		cnf: cnf,
+		svc: svc,
 	}
 }
